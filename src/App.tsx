@@ -13,16 +13,11 @@ interface fr0gg {
 }
 
 const App: React.FC = () => {
-  // Use the interface to type your state
   const [data, setData] = useState<fr0gg[]>([]);
-
-
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       const dbRef = ref(database, 'image_prompts');
-      // Modify the query to include a limit
-      const orderedQuery = query(dbRef, orderByChild('date'), limitToFirst(10)); // Limit to first 10 items
-
+      const orderedQuery = query(dbRef, orderByChild('date'), limitToFirst(15));
       try {
         const snapshot = await get(orderedQuery);
         if (snapshot.exists()) {
@@ -50,20 +45,13 @@ const App: React.FC = () => {
         <a href="https://github.com/joeyvalley/fr0.gg">fr-0.gg</a>
       </header>
       {data.length > 0 ? (
-        <div
-          className="fr0gg-container"
-        >
+        <div className="fr0gg-container">
           {data.map(entry => (
             <div className="fr0gg" key={entry.date}>
               <img src={entry.image_url} alt={`fr0gg ${entry.date}`} />
               <div className='info'>
                 <span className="birthday">{entry.date}</span>
-                <span className='copy-prompt'>
-                  <button onClick={() => copyPrompt(entry.prompt)}>
-                    Copy Prompt
-                    {/* <span className="checkmark">&#10003;</span> */}
-                  </button>
-                </span>
+                <span className='copy-prompt'><button onClick={() => copyPrompt(entry.prompt)}>Copy Prompt</button></span>
               </div>
             </div>
           ))}
@@ -73,8 +61,6 @@ const App: React.FC = () => {
       )
       }
       <div className='pagination'>
-        <button>&#10094;</button>
-        <button>&#10095;</button>
       </div>
     </div >
   );
