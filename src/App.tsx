@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { database } from './firebase-config';
-import { ref, get } from 'firebase/database';
+import { ref, get, query, orderByChild, limitToFirst } from 'firebase/database';
+
 
 import './App.css';
 
@@ -15,13 +16,16 @@ const App: React.FC = () => {
   // Use the interface to type your state
   const [data, setData] = useState<fr0gg[]>([]);
 
+
   useEffect(() => {
     const fetchData = async () => {
       const dbRef = ref(database, 'image_prompts');
+      // Modify the query to include a limit
+      const orderedQuery = query(dbRef, orderByChild('date'), limitToFirst(10)); // Limit to first 10 items
+
       try {
-        const snapshot = await get(dbRef);
+        const snapshot = await get(orderedQuery);
         if (snapshot.exists()) {
-          // Map the data to the structure of DatabaseEntry
           const fetchedData = Object.values(snapshot.val()) as fr0gg[];
           console.log(fetchedData);
           setData(fetchedData);
@@ -43,7 +47,7 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <header>
-        <a href="">fr0.gg</a>
+        <a href="https://github.com/joeyvalley/fr0.gg">fr-0.gg</a>
       </header>
       {data.length > 0 ? (
         <div
@@ -56,7 +60,8 @@ const App: React.FC = () => {
                 <span className="birthday">{entry.date}</span>
                 <span className='copy-prompt'>
                   <button onClick={() => copyPrompt(entry.prompt)}>
-                    Copy Prompt <span className="checkmark">&#10003;</span>
+                    Copy Prompt
+                    {/* <span className="checkmark">&#10003;</span> */}
                   </button>
                 </span>
               </div>
