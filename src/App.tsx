@@ -60,7 +60,8 @@ const App: React.FC = () => {
         <div className="loading">🐸</div>
       )
       }
-      <div className='pagination'>
+      <div className='footer'>
+        ok
       </div>
     </div >
   );

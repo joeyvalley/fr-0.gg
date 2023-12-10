@@ -122,28 +122,18 @@ header a {
   }
 }
 
-.pagination {
-  position: sticky;
-  bottom: 0;
+.footer {
+  position: relative;
   display: flex;
   width: calc(100% - 2rem);
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 0rem;
   margin: 0 1rem;
   font-size: 0.8rem;
   background: white;
   border-top: 1px solid black;
-}
-
-.pagination button {
-  padding: 0rem 0.5rem;
-  border-radius: 0.125rem;
-  cursor: pointer;
-
-  transition: all 0.3s ease;
-  border: 1px solid black;
 }
 
 @media screen and (max-width: 970px) {
