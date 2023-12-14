@@ -14,10 +14,12 @@ interface fr0gg {
 
 const App: React.FC = () => {
   const [data, setData] = useState<fr0gg[]>([]);
+  const [copiedPrompts, setCopiedPrompts] = useState<Record<string, boolean>>({}); // Track copied prompts
+
   useEffect(() => {
     async function fetchData() {
       const dbRef = ref(database, 'image_prompts');
-      const orderedQuery = query(dbRef, orderByChild('date'), limitToFirst(15));
+      const orderedQuery = query(dbRef, orderByChild('date'), limitToFirst(20));
       try {
         const snapshot = await get(orderedQuery);
         if (snapshot.exists()) {
@@ -35,8 +37,10 @@ const App: React.FC = () => {
   }, []);
 
   // Function to copy prompt to clipboard
-  function copyPrompt(prompt: string) {
+  function copyPrompt(prompt: string, date: string) {
     navigator.clipboard.writeText(prompt);
+    setCopiedPrompts(prevState => ({ ...prevState, [date]: true }));
+    setTimeout(() => setCopiedPrompts(prevState => ({ ...prevState, [date]: false })), 2000);
   }
 
   return (
@@ -51,7 +55,11 @@ const App: React.FC = () => {
               <img src={entry.image_url} alt={`fr0gg ${entry.date}`} />
               <div className='info'>
                 <span className="birthday">{entry.date}</span>
-                <span className='copy-prompt'><button onClick={() => copyPrompt(entry.prompt)}>Copy Prompt</button></span>
+                <span className='copy-prompt'>
+                  <button onClick={() => copyPrompt(entry.prompt, entry.date)}>
+                    {copiedPrompts[entry.date] ? <span style={{ fontStyle: 'italic', fontSize: '0.8rem' }}>Copied!</span> : 'Copy Prompt'}
+                  </button>
+                </span>
               </div>
             </div>
           ))}
