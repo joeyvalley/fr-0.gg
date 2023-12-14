@@ -3,9 +3,11 @@
 ![fr-0gg](./public/assets/iconic-fr0gg.png)
 fr-0gg is a project that grew out of my love of a few things: frogs, cheap handmade souvenirs, amateur ceramics, and Midjourney.
 
-I started by building a simple Discord bot (fr-0gg-bot) that lives on a lilypad in the fr-0.gg Discord server. 
+I started by building a simple Discord bot (fr-0gg-bot) that lives on a lilypad in the fr-0.gg Discord server alongside a Midjourney bot. 
 ![](./public/assets/server-pic.png)
-The bot generates a **curated** but **random** Midjourney prompt daily and starts a new thread in the designated channel. It then adds the Midjourney bot to this thread, sends the prompt as a message in this newly created thread, and emails me with a direct link to the message. All of this behavior is a convoluted workaround for two unfortunate facts: 
+The bot generates a **curated** but **random** Midjourney prompt daily and starts a new thread in the designated channel. It then adds the Midjourney bot to this thread, sends the day's prompt, and emails me with a direct link to the message. 
+
+All of this behavior is a convoluted workaround for two unfortunate facts: 
 
 1. There is *still* no public API for Midjourney.
 2. Discord bots are *not allowed* to issue commands to one another. 
@@ -14,8 +16,7 @@ The bot generates a **curated** but **random** Midjourney prompt daily and start
 
 So until one of these things change, the fr-0gg-bot will continue to function in this way, requiring the tender touch of a **human operator**.
 
-Once I click through the link and into the Discord app, I copy the day's prompt and issue it as a command to the Midjourney bot, for example:
-
+Anyways, once I click through the link and navigate into the Discord app, I copy the day's prompt and issue it as a command to the Midjourney bot. For example:
 
 `
 /imagine prompt: a small fat ceramic frog sculpture, oxidation fired, Agalychnis callidryas, souvenir from Cuba, full-color photograph, Pablo Picasso, Mark Rothko, textured white background, highly textured Xerox scan, archival museum catalog --no text, base, plinth  --stylize 750 --v 3
