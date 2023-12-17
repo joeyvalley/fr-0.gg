@@ -11,7 +11,7 @@ interface fr0gg {
 }
 
 const App: React.FC = () => {
-  const [numEntries, setNumEntries] = useState(20);
+  const [numEntries, setNumEntries] = useState(100);
   const appContainer = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<fr0gg[]>([]);
   const [paginatedData, setPaginatedData] = useState<fr0gg[]>([]);
@@ -20,14 +20,18 @@ const App: React.FC = () => {
 
   async function fetchData() {
     const dbRef = ref(database, 'image_prompts');
-    const orderedQuery = query(dbRef, orderByChild('date'));
+    const orderedQuery = query(dbRef, orderByChild("date"));
     try {
       const snapshot = await get(orderedQuery);
       if (snapshot.exists()) {
         const fetchedData = Object.values(snapshot.val()) as fr0gg[];
-        const newestFirst = fetchedData.reverse();
-        setData(newestFirst);
-        setPaginatedData(newestFirst.slice(0, numEntries));
+        const sortedData = fetchedData.sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
+        });
+        setData(sortedData);
+        setPaginatedData(sortedData.slice(0, numEntries));
       } else {
         console.log("No data available");
       }
@@ -85,11 +89,6 @@ const App: React.FC = () => {
               <img src={entry.image_url} alt={`fr0gg ${entry.date}`} onClick={() => { ribbit() }} />
               {/* <div className='info'>
                 <span className="birthday">{entry.date}</span>
-                <span className='copy-prompt'>
-                  <button onClick={() => copyPrompt(entry.prompt, entry.date)}>
-                    {copiedPrompts[entry.date] ? <span style={{ fontStyle: 'italic', fontSize: '0.8rem' }}>Copied!</span> : 'Copy Prompt'}
-                  </button>
-                </span>
               </div> */}
             </div>
           ))}
