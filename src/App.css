@@ -39,6 +39,7 @@ header a {
   font-size: 2rem;
   color: blue;
   text-decoration: underline;
+  width: fit-content;
 }
 
 .fr0gg-container {
@@ -51,7 +52,6 @@ header a {
 }
 
 .fr0gg {
-  /* border-bottom: 1px dotted black; */
   height: fit-content;
 }
 

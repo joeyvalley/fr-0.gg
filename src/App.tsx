@@ -11,13 +11,11 @@ interface fr0gg {
 }
 
 const App: React.FC = () => {
-  const numEntries = 25;
+  const [numEntries, setNumEntries] = useState(20);
   const appContainer = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<fr0gg[]>([]);
   const [paginatedData, setPaginatedData] = useState<fr0gg[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [copiedPrompts, setCopiedPrompts] = useState<Record<string, boolean>>({});
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [loading, setLoading] = useState(true);
 
   async function fetchData() {
@@ -43,29 +41,37 @@ const App: React.FC = () => {
 
   // Function to fetch data from firebase and store it in the data state.
   useEffect(() => {
+    if (windowWidth <= 400) {
+      setNumEntries(25);
+    } else if (windowWidth <= 600 && windowWidth > 400) {
+      setNumEntries(20);
+    } else if (windowWidth <= 800 && windowWidth > 600) {
+      setNumEntries(18);
+    }
+    else {
+      setNumEntries(24);
+    }
     fetchData();
   }, []);
 
-  // Fetch more items when currentPage changes
-  useEffect(() => {
-    if (!loading) return;
-
-    const startIndex = (currentPage - 1) * numEntries;
-    const endIndex = startIndex + numEntries;
-    const newPaginatedData = data.slice(startIndex, endIndex);
-
-    setPaginatedData((prevPaginatedData) => [...prevPaginatedData, ...newPaginatedData]);
-    setLoading(false); // Data has been fetched and appended, allow more loading
-  }, [currentPage, data, loading]);
-
-
-
   // Function to copy prompt to clipboard
-  function copyPrompt(prompt: string, date: string) {
-    navigator.clipboard.writeText(prompt);
-    setCopiedPrompts(prevState => ({ ...prevState, [date]: true }));
-    setTimeout(() => setCopiedPrompts(prevState => ({ ...prevState, [date]: false })), 1500);
+  // function copyPrompt(prompt: string, date: string) {
+  //   navigator.clipboard.writeText(prompt);
+  //   setCopiedPrompts(prevState => ({ ...prevState, [date]: true }));
+  //   setTimeout(() => setCopiedPrompts(prevState => ({ ...prevState, [date]: false })), 1500);
+  // }
+
+
+  function ribbit() {
+    const sound = new Audio("/assets/ribbit.mp3");
+    try {
+      sound.play();
+      console.log('ribbit');
+    } catch (error) {
+      console.error(error);
+    }
   }
+
 
   return (
     <div className="app" ref={appContainer}>
@@ -76,15 +82,15 @@ const App: React.FC = () => {
         <div className="fr0gg-container">
           {paginatedData.map(entry => (
             <div className="fr0gg" key={entry.date}>
-              <img src={entry.image_url} alt={`fr0gg ${entry.date}`} />
-              <div className='info'>
+              <img src={entry.image_url} alt={`fr0gg ${entry.date}`} onClick={() => { ribbit() }} />
+              {/* <div className='info'>
                 <span className="birthday">{entry.date}</span>
                 <span className='copy-prompt'>
                   <button onClick={() => copyPrompt(entry.prompt, entry.date)}>
                     {copiedPrompts[entry.date] ? <span style={{ fontStyle: 'italic', fontSize: '0.8rem' }}>Copied!</span> : 'Copy Prompt'}
                   </button>
                 </span>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
