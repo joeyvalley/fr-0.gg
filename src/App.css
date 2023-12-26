@@ -52,11 +52,42 @@ header a {
 }
 
 .fr0gg {
-  height: fit-content;
+  border: 1px solid black;
+  background: lightgray;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fr0gg::before {
+  content: '';
+  display: block;
+  padding-top: 100%
 }
 
 .fr0gg img {
-  border: 1px solid black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.not-loaded {
+  opacity: 0;
+
+}
+
+.loaded {
+  opacity: 1;
+
+}
+
+.image-loading {
+  opacity: 0.5;
 }
 
 .info {
@@ -170,11 +201,5 @@ header a {
 @media screen and (max-width: 600px) {
   .fr0gg-container {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .fr0gg-container {
-    grid-template-columns: 1fr;
   }
 }
