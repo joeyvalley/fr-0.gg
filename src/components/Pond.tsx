@@ -6,6 +6,8 @@ interface PondProps {
   date: string;
 }
 
+const prompt_close = new Audio('/assets/prompt_close.mp3');
+
 const Pond: React.FC<PondProps> = ({ setModal, fr0gg, date }) => {
   const [loaded, setLoaded] = useState(false);
   const pondRef = useRef<HTMLDivElement>(null);
@@ -16,7 +18,10 @@ const Pond: React.FC<PondProps> = ({ setModal, fr0gg, date }) => {
   }, []);
 
   const handleClose = () => {
-    setModal(false);
+    prompt_close.play();
+    setTimeout(() => {
+      setModal(false);
+    }, 200);
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -45,7 +50,7 @@ const Pond: React.FC<PondProps> = ({ setModal, fr0gg, date }) => {
       <div className="pond-fr0gg-container" ref={pondRef} onMouseDown={handleMouseDown}>
         <div className="pond-fr0gg-container-header">
           <div className="pond-fr0gg-container-header-date">{date}</div>
-          <div className="pond-closer" onClick={() => handleClose()}>Close</div>
+          <div className="pond-closer" onClick={() => handleClose()}>X</div>
         </div>
         <img src={fr0gg} alt="Selected fr0gg" className="pond-fr0gg" />
       </div>
