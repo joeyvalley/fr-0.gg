@@ -49,12 +49,13 @@ const App: React.FC = () => {
       const snapshot = await get(orderedQuery);
       if (snapshot.exists()) {
         const fetchedData = Object.values(snapshot.val()) as fr0gg[];
-        const sortedData = fetchedData.sort((a, b) => {
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
-          return dateB.getTime() - dateA.getTime();
-        });
-        setData(sortedData);
+        const shuffledData = fetchedData.sort(() => Math.random() - 0.5);
+        // const sortedData = fetchedData.sort((a, b) => {
+        //   const dateA = new Date(a.date);
+        //   const dateB = new Date(b.date);
+        //   return dateB.getTime() - dateA.getTime();
+        // });
+        setData(shuffledData);
       } else {
         console.log("No data available");
       }
