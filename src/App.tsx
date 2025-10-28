@@ -92,29 +92,34 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <header>
-        <a href="https://github.com/joeyvalley/fr0.gg">fr-0.gg</a>
+        <a href="https://github.com/joeyvalley/fr0.gg" target="_blank" rel="noreferrer">fr-0.gg</a>
         <div className="right-side">
         <span onClick={handlePrompt} className="header-info">about</span> 
         </div>
       </header>
       <div className={`info-box ${user_prompt ? "open" : ""}`}>
         <div className="info-box-header">
-          <div className="pond-fr0gg-container-header-date">about fr-0.gg</div>
+          <div className="info-box-header-left"></div>
           <div className="pond-closer" onClick={()=>handleCloseInfo()}>x</div>
         </div>
+        <div className="info-box-content">
         <p>fr-0.gg is a project that grew out of a love for a few things: frogs, cheap handmade souvenirs, amateur ceramics, and Midjourney.</p>
+        <img src="https://raw.githubusercontent.com/joeyvalley/fr-0.gg/main/public/assets/iconic-fr0gg.png" alt="fr0-gg example" />
         <p>I started by building a simple Discord bot (fr-0gg-bot) that lives in the fr-0.gg Discord server alongside a Midjourney bot.</p>
+        <img src="https://raw.githubusercontent.com/joeyvalley/fr-0.gg/main/public/assets/server-pic.png" alt="server pic" />
         <p>The bot generates a curated but random Midjourney prompt daily and starts a new thread in the designated channel. It then adds the Midjourney bot to this thread, sends the day's prompt, and emails me with a direct link to the message.</p>
         <p>All of this behavior is a convoluted workaround for two unfortunate facts:</p>
         <p>1. There is still no public API for Midjourney.<br />2. Discord bots are not allowed to issue commands to one another.</p>
+        <img src="https://raw.githubusercontent.com/joeyvalley/fr-0.gg/main/public/assets/email.png" alt="email example" />
         <p>So until one of these things change, the fr-0gg-bot will continue to function in this way, requiring the tender touch of a human operator.</p>
         <p>Anyways, once I click through the link and navigate into the Discord app, I copy the day's prompt and issue it as a command to the Midjourney bot. For example:</p>
-        <p>/imagine prompt: a small fat ceramic frog sculpture, oxidation fired, Agalychnis callidryas, souvenir from Cuba, full-color photograph, Pablo Picasso, Mark Rothko, textured white background, highly textured Xerox scan, archival museum catalog --no text, base, plinth  --stylize 750 --v 3</p>
+        <p className="code"><span className="red">/imagine</span> <span className="purple">prompt:</span> a small fat ceramic frog sculpture, oxidation fired, Agalychnis callidryas, souvenir from Cuba, full-color photograph, Pablo Picasso, Mark Rothko, textured white background, highly textured Xerox scan, archival museum catalog --no text, base, plinth  --stylize 750 --v 3</p>
         <p>The content of the prompt was developed over time through my own experiments with Midjourney and pretty reliably creates an image within a certain style that I find delightfully charming. There are specific variables that I've found give the generated image enough variation to keep them interesting while still maintaining the visual language I'm after.</p>
         <p>After a bit of tweaking back-and-forth with the Midjourney bot, I eventually arrive at a new fr0gg that I'm happy with and issue the !save command to the bot, which triggers a series of functions that scrape the thread for the most recent image, uploads the image to a Cloudinary account, and finally adds the uploaded image reference to a Firebase Realtime Database. Then the bot just hangs around until it's time to create the next prompt.</p>
         <p>The code for fr-0gg-bot itself lives inside a wifi-enabled Raspberry Pi module on my bookshelf.</p>
+        <img src="https://raw.githubusercontent.com/joeyvalley/fr-0.gg/main/public/assets/raspberry-pi.png" alt="bookshelf" />
         <p>The fr-0.gg front-end serves as a simple repository for all my fr0ggs.</p>
-
+        </div>
       </div>
       {loading ? (
         <div className="loading">🐸</div>
@@ -132,10 +137,8 @@ const App: React.FC = () => {
         </div>
       )}
       <div className='footer'>
-        <p>2023 - 2025</p>
-        <div>
-          <MiniPlayer tracks={tracks} startIndex={0} storageKey="fr0gg-player" autoPlay={false} />
-        </div>
+        <p className="footer-date">2023 - 2025</p>
+        <MiniPlayer tracks={tracks} startIndex={0} storageKey="fr0gg-player" autoPlay={false} />
       </div>
       {modal && selected_fr0gg && (
         <Pond
