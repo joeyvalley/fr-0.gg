@@ -8,6 +8,18 @@ import './App.css';
 import Pond from './components/Pond';
 import MiniPlayer, { Track } from './components/MiniPlayer';
 
+// Module-scope singletons — created once, never recreated on re-render
+const ribbit = new Audio('/assets/ribbit.mp3');
+const promptOpen = new Audio('/assets/prompt_open.mp3');
+const promptClose = new Audio('/assets/prompt_close.mp3');
+
+const tracks: Track[] = [
+  {
+    src: '/assets/fr-0ggs.mp3',
+    title: 'fr0.gg — site mix',
+    id: 'site-mix',
+  },
+];
 
 interface fr0gg {
   date: string;
@@ -27,20 +39,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
   const [selected_fr0gg, setSelected_Fr0gg] = useState<SelectedFr0gg | null>(null);
-  const [user_prompt, setUser_Prompt] = useState("");
-
-  const ribbit = new Audio('/assets/ribbit.mp3');
-
-  const prompt_open = new Audio('/assets/prompt_open.mp3');
-  const prompt_close = new Audio('/assets/prompt_close.mp3');
-
-  const tracks: Track[] = [
-  {
-    src: '/assets/fr-0ggs.mp3',           
-    title: 'fr0.gg — site mix',
-    id: 'site-mix',                          
-  },
-];
+  const [infoOpen, setInfoOpen] = useState(false);
 
   async function fetchData() {
     const dbRef = ref(database, 'image_prompts');
@@ -78,13 +77,14 @@ const App: React.FC = () => {
   };
 
   function handlePrompt() {
-    prompt_open.play();
+    promptOpen.play();
+    setInfoOpen(true);
   }
 
-  function handleCloseInfo(){
-    prompt_close.play();
+  function handleCloseInfo() {
+    promptClose.play();
     setTimeout(() => {
-      setUser_Prompt("");
+      setInfoOpen(false);
     }, 200);
   }
 
@@ -96,7 +96,7 @@ const App: React.FC = () => {
         <span onClick={handlePrompt} className="header-info">about</span> 
         </div>
       </header>
-      <div className={`info-box ${user_prompt ? "open" : ""}`}>
+      <div className={`info-box ${infoOpen ? "open" : ""}`}>
         <div className="info-box-header">
           <div className="info-box-header-left"></div>
           <div className="pond-closer" onClick={()=>handleCloseInfo()}>x</div>
