@@ -79,7 +79,6 @@ const App: React.FC = () => {
 
   function handlePrompt() {
     prompt_open.play();
-    setUser_Prompt("fuck");
   }
 
   function handleCloseInfo(){
