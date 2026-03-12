@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { database } from './firebase-config';
 import { ref, get, query, orderByChild } from 'firebase/database';
-import { prompt } from './prompt'
+import { shuffle } from './utils'
 
 import './App.css';
 
@@ -49,7 +49,7 @@ const App: React.FC = () => {
       const snapshot = await get(orderedQuery);
       if (snapshot.exists()) {
         const fetchedData = Object.values(snapshot.val()) as fr0gg[];
-        const shuffledData = fetchedData.sort(() => Math.random() - 0.5);
+        const shuffledData = shuffle(fetchedData);
         // const sortedData = fetchedData.sort((a, b) => {
         //   const dateA = new Date(a.date);
         //   const dateB = new Date(b.date);
@@ -79,7 +79,6 @@ const App: React.FC = () => {
 
   function handlePrompt() {
     prompt_open.play();
-    setUser_Prompt("fuck");
   }
 
   function handleCloseInfo(){
