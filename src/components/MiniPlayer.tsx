@@ -29,6 +29,9 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
   const [vol, setVol] = useState(0.9);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Holds the position to restore when a track first loads.
+  // Using a ref avoids making `t` a dependency of the audio effect.
+  const restoreTimeRef = useRef(0);
 
   const track = tracks[i];
   const key = useMemo(() => `${storageKey}:${track?.id ?? i}`, [storageKey, track?.id, i]);
@@ -40,9 +43,14 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
       if (saved) {
         const { volume, time } = JSON.parse(saved);
         if (typeof volume === 'number') setVol(clamp(volume, 0, 1));
-        if (typeof time === 'number') setT(Math.max(0, time));
+        if (typeof time === 'number') {
+          const restored = Math.max(0, time);
+          setT(restored);
+          restoreTimeRef.current = restored; // capture for onLoaded
+        }
       } else {
         setT(0);
+        restoreTimeRef.current = 0;
       }
     } catch {
       /* ignore */
@@ -58,8 +66,9 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
       setDur(el.duration || 0);
       setReady(true);
       // jump to saved position (after metadata is ready)
-      if (t > 0 && t < (el.duration || Infinity)) {
-        el.currentTime = t;
+      const restoreTime = restoreTimeRef.current;
+      if (restoreTime > 0 && restoreTime < (el.duration || Infinity)) {
+        el.currentTime = restoreTime;
       }
       if (autoPlay) {
         el.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
@@ -88,7 +97,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
       el.removeEventListener('timeupdate', onTime);
       el.removeEventListener('ended', onEnd);
     };
-  }, [i, tracks.length, autoPlay, t, vol]);
+  }, [i, tracks.length, autoPlay]);
 
   // Persist volume + time periodically
   useEffect(() => {
