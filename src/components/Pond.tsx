@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface PondProps {
   setModal: (value: boolean) => void;
@@ -11,10 +11,15 @@ const prompt_close = new Audio('/assets/prompt_close.mp3');
 const Pond: React.FC<PondProps> = ({ setModal, fr0gg, date }) => {
   const [loaded, setLoaded] = useState(false);
   const pondRef = useRef<HTMLDivElement>(null);
+  // Holds the cleanup for any in-progress drag so listeners are removed on unmount
+  const dragCleanupRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
     }, 200);
+    // Remove any lingering drag listeners if the modal unmounts mid-drag
+    return () => { dragCleanupRef.current?.(); };
   }, []);
 
   const handleClose = () => {
@@ -35,11 +40,15 @@ const Pond: React.FC<PondProps> = ({ setModal, fr0gg, date }) => {
         pondElement.style.top = `${moveEvent.clientY - offsetY}px`;
       };
 
-      const handleMouseUp = () => {
+      const cleanup = () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        dragCleanupRef.current = null;
       };
 
+      const handleMouseUp = () => { cleanup(); };
+
+      dragCleanupRef.current = cleanup;
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     }
