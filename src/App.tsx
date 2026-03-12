@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { database } from './firebase-config';
 import { ref, get, query, orderByChild } from 'firebase/database';
-import { prompt } from './prompt'
 import { shuffle } from './utils'
 
 import './App.css';
