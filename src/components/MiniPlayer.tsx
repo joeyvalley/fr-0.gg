@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type Track = {
   src: string;
@@ -106,7 +106,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
     if (el) el.volume = vol;
   }, [vol]);
 
-  const toggle = async () => {
+  const toggle = useCallback(async () => {
     const el = audioRef.current!;
     if (!el) return;
     if (!ready) return; // metadata not ready yet
@@ -121,19 +121,19 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
       el.pause();
       setIsPlaying(false);
     }
-  };
+  }, [ready]);
 
-  const seek = (val: number) => {
+  const seek = useCallback((val: number) => {
     const el = audioRef.current!;
     if (!el || !isFinite(dur) || dur <= 0) return;
     const target = clamp(val, 0, dur);
     el.currentTime = target;
     setT(target);
-  };
+  }, [dur]);
 
-  const skipRel = (deltaSec: number) => {
+  const skipRel = useCallback((deltaSec: number) => {
     seek((audioRef.current?.currentTime || 0) + deltaSec);
-  };
+  }, [seek]);
 
   // Keyboard controls: space (play/pause), ←/→ (seek 5s), M (mute toggle)
   useEffect(() => {
