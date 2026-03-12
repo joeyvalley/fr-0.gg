@@ -13,13 +13,6 @@ type MiniPlayerProps = {
   autoPlay?: boolean;           // default false (mobile browsers block anyway)
 };
 
-const fmt = (s: number) => {
-  if (!isFinite(s) || s < 0) return '0:00';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, '0')}`;
-};
-
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
 const MiniPlayer: React.FC<MiniPlayerProps> = ({
@@ -34,7 +27,6 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
   const [t, setT] = useState(0);       // currentTime (s)
   const [dur, setDur] = useState(0);   // duration (s)
   const [vol, setVol] = useState(0.9);
-  const [seeking, setSeeking] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -74,7 +66,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
       }
     };
     const onTime = () => {
-      if (!seeking) setT(el.currentTime || 0);
+      setT(el.currentTime || 0);
     };
     const onEnd = () => {
       // go to next track if exists, else stop
@@ -96,7 +88,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
       el.removeEventListener('timeupdate', onTime);
       el.removeEventListener('ended', onEnd);
     };
-  }, [i, tracks.length, autoPlay, seeking, t, vol]);
+  }, [i, tracks.length, autoPlay, t, vol]);
 
   // Persist volume + time periodically
   useEffect(() => {
@@ -143,13 +135,6 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
     seek((audioRef.current?.currentTime || 0) + deltaSec);
   };
 
-  const next = () => {
-    if (i < tracks.length - 1) setI(i + 1);
-  };
-  const prev = () => {
-    if (i > 0) setI(i - 1);
-  };
-
   // Keyboard controls: space (play/pause), ←/→ (seek 5s), M (mute toggle)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -163,7 +148,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [toggle]);
+  }, [toggle, skipRel]);
 
   if (!track) return null;
 
